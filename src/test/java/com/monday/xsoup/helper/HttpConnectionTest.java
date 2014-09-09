@@ -5,6 +5,7 @@ import static org.junit.Assert.*;
 import org.junit.Test;
 
 import com.monday.xsoup.Connection;
+import com.monday.xsoup.Connection.Method;
 import com.monday.xsoup.helper.HttpConnection;
 
 import java.io.IOException;
@@ -139,5 +140,15 @@ public class HttpConnectionTest {
         Connection con = HttpConnection.connect("http://example.com/");
         con.cookie("Name", "Val");
         assertEquals("Val", con.request().cookie("Name"));
+    }
+    
+    @Test public void dataBinary() throws IOException
+    {
+    	  Connection con = HttpConnection.connect("http://httpsns.appspot.com/api?name=test");
+    	  con.method(Method.POST);
+    	  con.dataBinary("hello".getBytes());
+    	  
+          assertEquals("1 messages are added to test",con.execute().body());
+    	
     }
 }

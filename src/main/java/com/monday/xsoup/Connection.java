@@ -1,5 +1,6 @@
 package com.monday.xsoup;
 
+import com.monday.xsoup.helper.HttpConnection.Request;
 import com.monday.xsoup.nodes.Document;
 import com.monday.xsoup.parser.Parser;
 
@@ -24,7 +25,7 @@ public interface Connection {
      * GET and POST http methods.
      */
     public enum Method {
-        GET, POST
+        GET, POST,PUT,DELETE,HEAD
     }
 
     /**
@@ -131,12 +132,21 @@ public interface Connection {
     /**
      * Add a number of request data parameters. Multiple parameters may be set at once, e.g.:
      * <code>.data("name", "jsoup", "language", "Java", "language", "English");</code> creates a query string like:
-     * <code>?name=jsoup&language=Java&language=English</code>
+     * <code>?name=xsoup&language=Java&language=English</code>
      * @param keyvals a set of key value pairs.
      * @return this Connection, for chaining
      */
     public Connection data(String... keyvals);
 
+    /**
+     * Add a number of request data parameters. Multiple parameters may be set at once, e.g.:
+     * <code>.data("name", "jsoup", "language", "Java", "language", "English");</code> creates a query string like:
+     * <code>?name=xsoup&language=Java&language=English</code>
+     * @param keyvals a set of key value pairs.
+     * @return this Connection, for chaining
+     * */
+    
+    public Connection dataBinary(byte[] byteArray);
     /**
      * Set a request header.
      * @param name header name
@@ -144,6 +154,7 @@ public interface Connection {
      * @return this Connection, for chaining
      * @see com.monday.xsoup.Connection.Request#headers()
      */
+    
     public Connection header(String name, String value);
 
     /**
@@ -178,6 +189,42 @@ public interface Connection {
      * @throws IOException on error
      */
     public Document get() throws IOException;
+    
+    /**
+     * Execute the request as a GET, and parse the result.
+     * @return parsed Document
+     * @throws java.net.MalformedURLException if the request URL is not a HTTP or HTTPS URL, or is otherwise malformed
+     * @throws HttpStatusException if the response is not OK and HTTP response errors are not ignored
+     * @throws UnsupportedMimeTypeException if the response mime type is not supported and those errors are not ignored
+     * @throws java.net.SocketTimeoutException if the connection times out
+     * @throws IOException on error
+     */
+    public Document put() throws IOException;
+    
+    /**
+     * Execute the request as a GET, and parse the result.
+     * @return parsed Document
+     * @throws java.net.MalformedURLException if the request URL is not a HTTP or HTTPS URL, or is otherwise malformed
+     * @throws HttpStatusException if the response is not OK and HTTP response errors are not ignored
+     * @throws UnsupportedMimeTypeException if the response mime type is not supported and those errors are not ignored
+     * @throws java.net.SocketTimeoutException if the connection times out
+     * @throws IOException on error
+     */
+    public Document delete() throws IOException;
+    
+    
+    /**
+     * Execute the request as a GET, and parse the result.
+     * @return parsed Document
+     * @throws java.net.MalformedURLException if the request URL is not a HTTP or HTTPS URL, or is otherwise malformed
+     * @throws HttpStatusException if the response is not OK and HTTP response errors are not ignored
+     * @throws UnsupportedMimeTypeException if the response mime type is not supported and those errors are not ignored
+     * @throws java.net.SocketTimeoutException if the connection times out
+     * @throws IOException on error
+     */
+    public Document head() throws IOException;
+    
+    
 
     /**
      * Execute the request as a POST, and parse the result.
@@ -415,6 +462,8 @@ public interface Connection {
          * @return this Request, for chaining
          */
         public Request data(KeyVal keyval);
+        
+      
 
         /**
          * Get all of the request's data parameters
@@ -434,6 +483,20 @@ public interface Connection {
          * @return current Parser
          */
         public Parser parser();
+       
+        /**
+         * set a dataBinary  parameter to the request
+         * @param byteArray data to set.
+         * @return this Request, for chaining
+         */
+        public Request dataBinary(byte[] byteArray) ;
+        
+        /**
+         * get a dataBinary  parameter of the request
+         *  
+         * @return this byte[]
+         */
+        public byte[] dataBinary() ;
     }
 
     /**

@@ -103,7 +103,12 @@ public class HttpConnection implements Connection {
         req.data(KeyVal.create(key, value));
         return this;
     }
-
+    
+    public Connection dataBinary(byte[] byteArray) {
+        this.req.dataBinary(byteArray);
+        return this;
+    }
+    
     public Connection data(Map<String, String> data) {
         Validate.notNull(data, "Data map must not be null");
         for (Map.Entry<String, String> entry : data.entrySet()) {
@@ -312,7 +317,8 @@ public class HttpConnection implements Connection {
         private boolean ignoreHttpErrors = false;
         private boolean ignoreContentType = false;
         private Parser parser;
-
+        private byte[] dataBinary;
+        
       	private Request() {
             timeoutMilliseconds = 3000;
             maxBodySizeBytes = 1024 * 1024; // 1MB
@@ -376,6 +382,20 @@ public class HttpConnection implements Connection {
             return this;
         }
 
+       
+        
+        
+        public Request dataBinary(byte[] byteArray) {
+            Validate.notNull(byteArray, "Key val must not be null");
+            this.dataBinary = byteArray;
+            return this;
+        }
+        public byte[] dataBinary() {
+          
+        	return this.dataBinary ;
+            
+        }
+
         public Collection<Connection.KeyVal> data() {
             return data;
         }
@@ -388,6 +408,8 @@ public class HttpConnection implements Connection {
         public Parser parser() {
             return parser;
         }
+
+		 
     }
 
     public static class Response extends Base<Connection.Response> implements Connection.Response {
@@ -423,7 +445,10 @@ public class HttpConnection implements Connection {
             String protocol = req.url().getProtocol();
             if (!protocol.equals("http") && !protocol.equals("https"))
                 throw new MalformedURLException("Only http & https protocols supported");
-
+            
+            
+            
+            
             // set up the request for execution
             if (req.method() == Connection.Method.GET && req.data().size() > 0)
                 serialiseRequestUrl(req); // appends query string
@@ -431,7 +456,14 @@ public class HttpConnection implements Connection {
             Response res;
             try {
                 conn.connect();
-                if (req.method() == Connection.Method.POST)
+                
+             // Raw data post or put 
+                if(req.dataBinary()!=null)      
+                {
+                	
+                	writeRawPost(req.dataBinary(), conn.getOutputStream()); 	
+                }
+                else if (req.method() == Connection.Method.POST || req.method() ==  Connection.Method.PUT)
                     writePost(req.data(), conn.getOutputStream());
 
                 int status = conn.getResponseCode();
@@ -533,7 +565,7 @@ public class HttpConnection implements Connection {
             conn.setInstanceFollowRedirects(false); // don't rely on native redirection support
             conn.setConnectTimeout(req.timeout());
             conn.setReadTimeout(req.timeout());
-            if (req.method() == Method.POST)
+            if (req.method() == Method.POST||req.method()==Method.PUT)
                 conn.setDoOutput(true);
             if (req.cookies().size() > 0)
                 conn.addRequestProperty("Cookie", getRequestCookieString(req));
@@ -605,6 +637,13 @@ public class HttpConnection implements Connection {
                 w.write(URLEncoder.encode(keyVal.value(), DataUtil.defaultCharset));
             }
             w.close();
+        }
+        private static void writeRawPost(byte[] data, OutputStream outputStream) throws IOException {
+          
+        	
+        	outputStream.write(data);
+            outputStream.close();
+            
         }
         
         private static String getRequestCookieString(Connection.Request req) {
@@ -692,4 +731,23 @@ public class HttpConnection implements Connection {
             return key + "=" + value;
         }      
     }
+
+	public Document put() throws IOException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public Document delete() throws IOException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public Document head() throws IOException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	
+
+	 
 }
