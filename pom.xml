@@ -5,13 +5,13 @@
 
   <groupId>com.javamonday.xsoup</groupId>
   <artifactId>xsoup</artifactId>
-  <version>1.7.3-SNAPSHOT</version>
+  <version>1.7.4-SNAPSHOT</version>
   <description>xsoup HTML parser</description>
   <url>http://xsoup.org/</url>
   <inceptionYear>2009</inceptionYear>
   <issueManagement>
   	<system>GitHub</system>
-  	<url>http://github.com/jhy/jsoup/issues</url>
+  	<url>https://github.com/JavaMonday/xsoup/issues</url>
   </issueManagement>
   <licenses>
   	<license>

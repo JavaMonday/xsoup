@@ -151,4 +151,12 @@ public class HttpConnectionTest {
           assertEquals("1 messages are added to test",con.execute().body());
     	
     }
+    
+    
+    @Test public void head() throws IOException
+    {
+    	Connection con = HttpConnection.connect("http://httpsns.appspot.com/api?name=test");
+    	
+    	System.out.println(con.head().get("Date"));
+    }
 }

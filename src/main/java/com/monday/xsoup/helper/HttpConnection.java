@@ -450,7 +450,7 @@ public class HttpConnection implements Connection {
             
             
             // set up the request for execution
-            if (req.method() == Connection.Method.GET && req.data().size() > 0)
+            if (req.method() == Connection.Method.GET || req.method() == Connection.Method.HEAD  && req.data().size() > 0)
                 serialiseRequestUrl(req); // appends query string
             HttpURLConnection conn = createConnection(req);
             Response res;
@@ -733,19 +733,26 @@ public class HttpConnection implements Connection {
     }
 
 	public Document put() throws IOException {
-		// TODO Auto-generated method stub
-		return null;
+		req.method(Method.PUT);
+		this.execute();
+		return res.parse();
 	}
 
 	public Document delete() throws IOException {
-		// TODO Auto-generated method stub
-		return null;
+		req.method(Method.DELETE);
+		this.execute();
+		return res.parse();
+		
 	}
 
-	public Document head() throws IOException {
-		// TODO Auto-generated method stub
-		return null;
+	public Map<String, String> head() throws IOException {
+		req.method(Method.HEAD);
+		this.execute();
+		
+		return res.headers();
 	}
+
+	
 
 	
 
