@@ -1,6 +1,9 @@
-jsoup changelog
-
+xsoup changelog
+*** Release 1.7.4 
+* Added put head delete method
+* Added raw http post data by using dataBinary method (see curl for detail use)
 *** Release 1.7.3 [PENDING]
+jsoup changelog
  * Introduced FormElement, providing easy access to form controls and their data, and the ability to submit forms
    with Jsoup.Connect.
 
